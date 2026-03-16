@@ -26,10 +26,19 @@ echo "  Target version: v${NODE_VER}"
 echo "  Build mode: ${BUILD_MODE}"
 
 # ── apk 模式: 使用 Alpine 仓库的 Node.js ──
+# PKG_TYPE: lts (nodejs) 或 current (nodejs-current)
 build_apk() {
 	echo ""
 	echo "=== Building with Alpine apk mode ==="
-	apk add --no-cache nodejs npm xz icu-data-full patchelf
+	
+	# 根据请求的版本选择包
+	if [ "${PKG_TYPE}" = "current" ]; then
+		echo "Using nodejs-current package for newer version"
+		apk add --no-cache nodejs-current npm xz icu-data-full patchelf
+	else
+		echo "Using nodejs (LTS) package"
+		apk add --no-cache nodejs npm xz icu-data-full patchelf
+	fi
 
 	ACTUAL_VER=$(node --version | sed 's/^v//')
 	echo "Alpine Node.js version: v${ACTUAL_VER} (requested: v${NODE_VER})"
