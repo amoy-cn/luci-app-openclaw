@@ -481,8 +481,7 @@ function action_uninstall()
 	sys.exec("rm -f /tmp/openclaw-setup.* /tmp/openclaw-update.log /tmp/openclaw-plugin-upgrade.* /var/run/openclaw*.pid")
 	-- 清理 LuCI 缓存
 	sys.exec("rm -f /tmp/luci-indexcache /tmp/luci-modulecache/* 2>/dev/null")
-	-- 删除 openclaw 系统用户
-	sys.exec("sed -i '/^openclaw:/d' /etc/passwd /etc/shadow /etc/group 2>/dev/null")
+	-- 注意：不再删除 openclaw 系统用户，因为环境卸载后重新安装时需要该用户，且避免产生孤儿文件导致权限问题
 
 	http.prepare_content("application/json")
 	http.write_json({
