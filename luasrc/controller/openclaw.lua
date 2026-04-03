@@ -1256,7 +1256,9 @@ function action_wechat_login()
         -- 清理旧状态和可能的残留进程
         sys.exec("kill -9 $(cat /tmp/openclaw-wechat-login.pid 2>/dev/null) 2>/dev/null")
         sys.exec("pkill -f 'channels login --channel openclaw-weixin' 2>/dev/null")
-        sys.exec("rm -f /tmp/openclaw-wechat-qrcode.txt /tmp/openclaw-wechat-login.pid /tmp/openclaw-wechat-login.exit /tmp/openclaw-wechat-restarted")	-- 后台启动登录流程，将二维码输出到文件
+        sys.exec("rm -f /tmp/openclaw-wechat-qrcode.txt /tmp/openclaw-wechat-login.pid /tmp/openclaw-wechat-login.exit /tmp/openclaw-wechat-restarted")
+
+	-- 后台启动登录流程，将二维码输出到文件
         local login_cmd = string.format(
                 "( " ..
                 "echo '正在启动微信登录...' > /tmp/openclaw-wechat-qrcode.txt; " ..
@@ -1313,7 +1315,9 @@ function action_wechat_login_status()
         local qrcode_url = ""
         for url in qrcode:gmatch("https?://[^\n\r]+") do
                 qrcode_url = url
-        end	-- 检查是否登录成功
+        end
+
+	-- 检查是否登录成功
 	local logged_in = qrcode:find("登录成功") ~= nil or qrcode:find("成功登录") ~= nil or qrcode:find("Login success") ~= nil or qrcode:find("Logged in") ~= nil
 
         local state = "idle"
