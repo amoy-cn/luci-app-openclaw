@@ -1336,7 +1336,7 @@ function action_wechat_login_status()
         -- 如果刚登录成功，触发一次重启，确保主进程加载微信
         if state == "success" and not nixio.fs.stat("/tmp/openclaw-wechat-restarted", "type") then
                 sys.exec("touch /tmp/openclaw-wechat-restarted")
-                sys.exec("/etc/init.d/openclaw restart &")
+                sys.exec("/etc/init.d/openclaw restart_gateway >/dev/null 2>&1 &")
         end	http.prepare_content("application/json")
 	http.write_json({
 		status = "ok",
@@ -1524,7 +1524,7 @@ function action_wechat_logout()
 	)        sys.exec(logout_cmd .. " >/dev/null 2>&1")
         
         -- 重启服务
-        sys.exec("/etc/init.d/openclaw restart &")
+        sys.exec("/etc/init.d/openclaw restart_gateway >/dev/null 2>&1 &")
 
         http.prepare_content("application/json")
         http.write_json({ status = "ok", message = "已下线账号: " .. account_id })
